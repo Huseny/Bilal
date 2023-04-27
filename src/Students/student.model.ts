@@ -18,6 +18,11 @@ export const TakenDays = new mongoose.Schema({
   date: String,
 });
 
+export const UstazSchema = new mongoose.Schema({
+  ustazName: String,
+  password: String,
+})
+
 export interface Student extends mongoose.Document {
   firstName: string;
   middleName: string;
@@ -30,6 +35,11 @@ export interface Student extends mongoose.Document {
 export interface Section extends mongoose.Document {
   sectionName: string;
   dateCreated: string;
+}
+
+export interface Ustaz extends mongoose.Document {
+  ustazName: string;
+  password: string;
 }
 
 export interface TakenDays extends mongoose.Document {

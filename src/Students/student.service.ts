@@ -15,6 +15,7 @@ export class StudentService {
     @InjectModel('Section') private section: Model<Section>,
     @InjectModel('TakenDays') private takenDays: Model<TakenDays>,
   ) {}
+  
 
   async addstudent(
     firstName: string,
