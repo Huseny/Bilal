@@ -1,5 +1,6 @@
 import { Body, Controller, Post, Get, Patch } from '@nestjs/common';
 import { StudentService } from './student.service';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @Controller('student')
 export class StudentController {
@@ -7,22 +8,55 @@ export class StudentController {
 
   @Post('addstudent')
   async createstudent(
-    @Body('firstName') firstName: string,
-    @Body('middleName') middleName: string,
-    @Body('lastName') lastName: string,
+    @Body('fullnName') fullName: string,
     @Body('studentAge') studentAge: number,
-    @Body('studentClass') studentClass: string,
-    @Body('dateCreated') dateCreated: string,
-  ) {
+    @Body('musteweTeilim') musteweTeilim: string,
+    @Body('sex') sex: string,
+    @Body('subCity') subCity: string,
+    @Body('wereda') wereda: string,
+    @Body('kebele') kebele: string,
+    @Body('specialNameOfArea') specialNameOfArea: string,
+    @Body('homeNo') homeNo: number,
+    @Body('familyNo') familyNo: number,
+    @Body('MesderAdukhul') MesderAdukhul: string,
+    @Body('ChooseParent') ChooseParent: string,
+    @Body('chooseClass') chooseClass: string,    
+    ) {
     const generatedId = await this.studentservice.addstudent(
-      firstName,
-      middleName,
-      lastName,
+      fullName,
       studentAge,
-      studentClass,
-      dateCreated,
+      musteweTeilim,
+      sex,
+      subCity,
+      wereda,
+      kebele,
+      specialNameOfArea,
+      homeNo,
+      familyNo,
+      MesderAdukhul,
+      ChooseParent,
+      chooseClass,
     );
     return { id: generatedId };
+  }
+
+  @Public()
+  @Post('addparent')
+  async createparent(
+    @Body('fullName') fullName: string,
+    @Body('sex') sex: string,
+    @Body('phoneno') phoneNo: string,
+    @Body('email') email: string,
+    @Body('address') address: string,
+  ){
+    const generatedId = await this.studentservice.addparent(
+      fullName,
+      sex,
+      phoneNo,
+      email,
+      address,
+    );
+    return {id: generatedId._id};
   }
 
   @Post('addabscent')
@@ -37,6 +71,22 @@ export class StudentController {
 
     return { id: abscentId };
   }
+
+  @Post('addclass')
+  async addclass(
+    @Body('classname') className: string,
+    @Body('datestarted') dateStarted: Date,
+    @Body('dateEnded') dateEnded: Date,
+  ) {
+    const abscentId = await this.studentservice.addclass(
+      className,
+      dateStarted,
+      dateEnded
+    );
+
+    return { id: abscentId };
+  }
+  
 
   @Post('addDate')
   async addDay(@Body('day') day: string) {
@@ -79,6 +129,7 @@ export class StudentController {
     return await this.studentservice.getdaymark(date);
   }
 
+  
   @Get('getallstudents')
   async getallstudents() {
     const allstudents = await this.studentservice.getallstudents();
@@ -108,19 +159,35 @@ export class StudentController {
   @Patch('editstudent')
   async editstudent(
     @Body('studentId') studentId: string,
-    @Body('firstName') firstName: string,
-    @Body('middleName') middleName: string,
-    @Body('lastName') lastName: string,
+    @Body('fullnName') fullName: string,
     @Body('studentAge') studentAge: number,
-    @Body('studentClass') studentClass: string,
+    @Body('musteweTeilim') musteweTeilim: string,
+    @Body('sex') sex: string,
+    @Body('subCity') subCity: string,
+    @Body('wereda') wereda: string,
+    @Body('kebele') kebele: string,
+    @Body('specialNameOfArea') specialNameOfArea: string,
+    @Body('homeNo') homeNo: number,
+    @Body('familyNo') familyNo: number,
+    @Body('MesderAdukhul') MesderAdukhul: string,
+    @Body('ChooseParent') ChooseParent: string,
+    @Body('chooseClass') chooseClass: string,    
   ) {
     const result = await this.studentservice.editstudent(
       studentId,
-      firstName,
-      middleName,
-      lastName,
+      fullName,
       studentAge,
-      studentClass,
+      musteweTeilim,
+      sex,
+      subCity,
+      wereda,
+      kebele,
+      specialNameOfArea,
+      homeNo,
+      familyNo,
+      MesderAdukhul,
+      ChooseParent,
+      chooseClass,
     );
     return result;
   }

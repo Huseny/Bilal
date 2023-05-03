@@ -16,9 +16,23 @@ export class AuthController {
     @HttpCode(HttpStatus.CREATED)
     async signUpEmployer(
       @Body('name') name: string,
-      @Body('password') password: string
+      @Body('password') password: string,
+      @Body('phoneno') phoneNo: number,
+      @Body('email') email: string,
+      @Body('address') address: string,
       ){
-       const result=await this.authService.signUpEmployer(name, password);
+       const result=await this.authService.signUpEmployer(name, password, phoneNo, email, address);
+       return  result as object;
+    }
+
+    @Public()
+    @Post("signup/admin")
+    @HttpCode(HttpStatus.CREATED)
+    async addadmin(
+      @Body('name') name: string,
+      @Body('password') password: string,
+      ){
+       const result=await this.authService.addadmin(name, password);
        return  result as object;
     }
 

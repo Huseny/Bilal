@@ -5,6 +5,9 @@ import { Abscent } from './abscence.model';
 import { Mark } from './mark.model';
 import { Student, TakenDays } from './student.model';
 import { Section } from './student.model';
+import { Parent } from 'src/models/Parent.model';
+import { Class } from 'src/models/class.model';
+import { ChildProcess } from 'child_process';
 
 @Injectable()
 export class StudentService {
@@ -14,28 +17,62 @@ export class StudentService {
     @InjectModel('Mark') private mark: Model<Mark>,
     @InjectModel('Section') private section: Model<Section>,
     @InjectModel('TakenDays') private takenDays: Model<TakenDays>,
+    @InjectModel('Parent') private parent: Model<Parent>,
+    @InjectModel('Class') private Class: Model<Class>,
   ) {}
   
 
   async addstudent(
-    firstName: string,
-    middleName: string,
-    lastName: string,
-    studentAge: number,
-    studentClass: string,
-    dateCreated: string,
+    fullName: string,
+    age: number,
+  musteweTeilim: string,
+  sex: string,
+  subCity: string,
+  wereda: string,
+  kebele: string,
+  specialNameOfArea: string,
+  homeNo: number,
+  familyNo: number,
+  MesderAdukhul: string,
+  ChooseParent: string,
+  chooseClass: string,
   ) {
     const newStudent = new this.student({
-      firstName,
-      middleName,
-      lastName,
-      studentAge,
-      studentClass,
-      dateCreated,
+      fullName,
+      age,
+      musteweTeilim,
+      sex,
+      subCity,
+      wereda,
+      kebele,
+      specialNameOfArea,
+      homeNo,
+      familyNo,
+      MesderAdukhul,
+      ChooseParent,
+      chooseClass,
     });
     const studentId = await newStudent.save();
     return studentId;
   }
+async addparent(
+  fullName: string,
+  sex: string,
+  phoneNo: string,
+  email: string,
+  address: string,
+){
+  const newParent = new this.parent({
+    fullName,
+    sex,
+    phoneNo,
+    email,
+    address,
+  });
+  const parentId = await newParent.save();
+  return parentId;
+}
+
 
   async addabscent(studentId: string, dateofabscent: string) {
     const newAbscent = new this.abscent({
@@ -45,6 +82,17 @@ export class StudentService {
 
     const abscentId = await newAbscent.save();
     return abscentId;
+  }
+
+  async addclass(className: string, dateStarted: Date, dateEnded: Date) {
+    const newClass = new this.Class({
+      className,
+      dateStarted,
+      dateEnded
+    });
+
+    const classId = await newClass.save();
+    return classId;
   }
 
   async getattendance() {
@@ -141,11 +189,19 @@ export class StudentService {
   }
   async editstudent(
     studentId: string,
-    firstName: string,
-    middleName: string,
-    lastName: string,
-    studentAge: number,
-    studentClass: string,
+    fullName,
+      age,
+      musteweTeilim,
+      sex,
+      subCity,
+      wereda,
+      kebele,
+      specialNameOfArea,
+      homeNo,
+      familyNo,
+      MesderAdukhul,
+      ChooseParent,
+      chooseClass,
   ) {
     try {
       let studentDetail = await this.student.find({
@@ -153,11 +209,19 @@ export class StudentService {
       });
       let newStudent = studentDetail[0];
       if (newStudent) {
-        newStudent.firstName = firstName;
-        newStudent.middleName = middleName;
-        newStudent.lastName = lastName;
-        newStudent.studentAge = studentAge;
-        newStudent.studentClass = studentClass;
+        newStudent.fullName = fullName;
+        newStudent.age = age;
+        newStudent.musteweTeilim = musteweTeilim;
+        newStudent.sex = sex;
+        newStudent.subCity = subCity;
+        newStudent.wereda = wereda;
+        newStudent.kebele = kebele;
+        newStudent.specialNameOfArea = specialNameOfArea;
+        newStudent.homeNo = homeNo;
+        newStudent.familyNo = familyNo;
+        newStudent.MesderAdukhul = MesderAdukhul;
+        newStudent.ChooseParent = ChooseParent;
+        newStudent.chooseClass = chooseClass;
         await newStudent.save();
         return newStudent;
       }

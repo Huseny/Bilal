@@ -1,12 +1,21 @@
 import * as mongoose from 'mongoose';
 
 export const StudentSchema = new mongoose.Schema({
-  firstName: String,
-  middleName: String,
-  lastName: String,
+  fulName: String,
+  age: Number,
+  musteweTeilim: Number,
+  sex: String,
+  subCity: String,
+  wereda: String,
+  kebele: String,
+  specialNameOfArea: String,
+  homeNo: Number,
+  familyNo: Number,
+  MesderAdukhul: String,
+  ChooseParent: String,
+  chooseClass: String,
   studentAge: Number,
   studentClass: String,
-  dateCreated: String,
 });
 
 export const SectionSchema = new mongoose.Schema({
@@ -21,15 +30,28 @@ export const TakenDays = new mongoose.Schema({
 export const UstazSchema = new mongoose.Schema({
   ustazName: String,
   password: String,
+  phoneNo: Number,
+  email: String,
+  address: String,
+
 })
 
 export interface Student extends mongoose.Document {
-  firstName: string;
-  middleName: string;
-  lastName: string;
+  fullName: string;
+  age: number;
+  musteweTeilim: number;
+  sex: string;
+  subCity: string;
+  wereda: string;
+  kebele: string;
+  specialNameOfArea: string;
+  homeNo: number;
+  familyNo: number;
+  MesderAdukhul: string;
+  ChooseParent: string;
+  chooseClass: string;
   studentAge: number;
   studentClass: string;
-  dateCreated: string;
 }
 
 export interface Section extends mongoose.Document {
@@ -40,6 +62,9 @@ export interface Section extends mongoose.Document {
 export interface Ustaz extends mongoose.Document {
   ustazName: string;
   password: string;
+  phoneNo: number,
+  email: string,
+  address: string,
 }
 
 export interface TakenDays extends mongoose.Document {

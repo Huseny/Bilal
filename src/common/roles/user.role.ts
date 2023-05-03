@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 export enum UserRole{
     ADMIN="admin",
-    JOBSEEKER="job-seeker",
-    EMPLOYER="employer",
+    PARENT="parent",
+    USTAZ="ustaz",
     UNIVERSITY="university"
 }

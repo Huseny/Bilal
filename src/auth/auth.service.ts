@@ -8,12 +8,14 @@ import * as bcrypt from "bcrypt";
 import { Login } from './login.model';
 import { UserRole } from 'src/common/roles/user.role';
 import { tokens } from './types/types';
+import { Admin } from 'src/models/admin.model';
 
 
 @Injectable()
 export class AuthService {
     constructor(@InjectModel("Login") private readonly loginModel:Model<Login>,
     @InjectModel("Ustaz") private readonly ustazModel:Model<Ustaz>,
+    @InjectModel("Admin") private readonly adminModel:Model<Admin>,
     private jwtService:JwtService,
     private config:ConfigService){
 
@@ -54,16 +56,19 @@ export class AuthService {
             console.log('Updated document: ', doc);
           }
     }
-    async signUpEmployer(name: string, password: string):Promise<any>{
+    async signUpEmployer(name: string, password: string, phoneNo: number, email: string, address: string):Promise<any>{
         const hash=await this.hashData(password);
         const newUstazLogin=new this.loginModel({
             name: name,
             password:hash,
-            role:UserRole.EMPLOYER
+            role:UserRole.USTAZ
         })
         const newUstaz=new this.ustazModel({
             ustazName: name,
             password: hash,
+            phoneNo,
+            email,
+            address,
         })
         await newUstazLogin.save();
         await newUstaz.save();
@@ -73,9 +78,31 @@ export class AuthService {
         return {...tokens,role:newUstazLogin.role};
 
     }
+
+    async addadmin(name: string, password: string,):Promise<any>{
+        const hash=await this.hashData(password);
+        const newadminlogin=new this.loginModel({
+            name: name,
+            password:hash,
+            role:UserRole.ADMIN
+        })
+        const newAdmin=new this.adminModel({
+            ustazName: name,
+            password: hash,
+            
+        })
+        await newadminlogin.save();
+        await newAdmin.save();
+        const tokens=await this.getTokens(newadminlogin.id,newadminlogin.name,newadminlogin.role)
+        await this.updateRtHash(newadminlogin.id,tokens.refresh_token)
+        console.log(tokens);
+        return {...tokens,role:newadminlogin.role};
+
+    }
     
     async login(name: string, password: string):Promise<any>{
         const user=await this.loginModel.findOne({name: name});
+        console.log(user)
         if (!user) {
             //console.log('User not found');
             throw new HttpException("User not found!",HttpStatus.FORBIDDEN)
