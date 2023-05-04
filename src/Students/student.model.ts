@@ -14,8 +14,6 @@ export const StudentSchema = new mongoose.Schema({
   MesderAdukhul: String,
   ChooseParent: String,
   chooseClass: String,
-  studentAge: Number,
-  studentClass: String,
 });
 
 export const SectionSchema = new mongoose.Schema({
@@ -50,8 +48,6 @@ export interface Student extends mongoose.Document {
   MesderAdukhul: string;
   ChooseParent: string;
   chooseClass: string;
-  studentAge: number;
-  studentClass: string;
 }
 
 export interface Section extends mongoose.Document {

@@ -68,4 +68,16 @@ export class AuthController {
         const result=await this.authService.refreshTokens(userId,refreshToken);
         return result as object;
     }
+
+    @Public()
+    @UseGuards(RtGuard)
+    @Post("getInformation")
+    @HttpCode(HttpStatus.OK)
+    async getUserInformation(
+        @GetCurrentUserId() UserId: string,
+    ){
+        const result = await this.authService.getUserInformation(UserId);
+        return result as object;
+    }
+    
 }

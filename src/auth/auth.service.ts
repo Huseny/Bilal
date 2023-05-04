@@ -144,4 +144,16 @@ export class AuthService {
             }
           }
     }
+
+    async getUserInformation(userId: string){
+        // const abscentdays = await this.abscent.find({ studentId: studentId });
+        const user=await this.loginModel.findById({_id:userId});
+        console.log(user.toJSON());
+        if (!user) {
+            throw new HttpException("A problem has occured",HttpStatus.BAD_REQUEST);
+            //console.error(err);
+          } else{
+            return user;
+          }
+    }
 }
