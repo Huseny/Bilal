@@ -9,6 +9,7 @@ import { Login } from './login.model';
 import { UserRole } from 'src/common/roles/user.role';
 import { tokens } from './types/types';
 import { Admin } from 'src/models/admin.model';
+import { Parent } from 'src/models/Parent.model';
 
 
 @Injectable()
@@ -16,6 +17,8 @@ export class AuthService {
     constructor(@InjectModel("Login") private readonly loginModel:Model<Login>,
     @InjectModel("Ustaz") private readonly ustazModel:Model<Ustaz>,
     @InjectModel("Admin") private readonly adminModel:Model<Admin>,
+    @InjectModel('Parent') private parent: Model<Parent>,
+
     private jwtService:JwtService,
     private config:ConfigService){
 
@@ -58,11 +61,6 @@ export class AuthService {
     }
     async signUpEmployer(name: string, password: string, phoneNo: number, email: string, address: string):Promise<any>{
         const hash=await this.hashData(password);
-        const newUstazLogin=new this.loginModel({
-            name: name,
-            password:hash,
-            role:UserRole.USTAZ
-        })
         const newUstaz=new this.ustazModel({
             ustazName: name,
             password: hash,
@@ -70,8 +68,16 @@ export class AuthService {
             email,
             address,
         })
+        const newUstazId = await newUstaz.save();
+        const newUstazLogin=new this.loginModel({
+            name: name,
+            password:hash,
+            role:UserRole.USTAZ,
+            userId: newUstazId,
+        })
+        
         await newUstazLogin.save();
-        await newUstaz.save();
+        
         const tokens=await this.getTokens(newUstazLogin.id,newUstazLogin.name,newUstazLogin.role)
         await this.updateRtHash(newUstazLogin.id,tokens.refresh_token)
         console.log(tokens);
@@ -99,6 +105,39 @@ export class AuthService {
         return {...tokens,role:newadminlogin.role};
 
     }
+    async addparent(
+        fullName: string,
+        password: string,
+        sex: string,
+        phoneNo: string,
+        email: string,
+        address: string,
+      ){
+        const hash=await this.hashData(password);
+        const newParent = new this.parent({
+          fullName,
+          password,
+          sex,
+          phoneNo,
+          email,
+          address,
+        });
+        const parentId = await newParent.save();
+        const newParentLogin=new this.loginModel({
+            name: fullName,
+            password:hash,
+            role:UserRole.PARENT,
+            userId: parentId,
+        })
+        
+        await newParentLogin.save();
+        const tokens=await this.getTokens(newParentLogin.id,newParentLogin.name,newParentLogin.role)
+        await this.updateRtHash(newParentLogin.id,tokens.refresh_token)
+        console.log(tokens);
+        return {...tokens,role:newParentLogin.role};
+
+      }
+      
     
     async login(name: string, password: string):Promise<any>{
         const user=await this.loginModel.findOne({name: name});

@@ -5,6 +5,7 @@ export const LoginSchema=new mongoose.Schema({
     password:{type:String,required:true},
     hashedRt:{type:String},
     role:{type:String,required:true},
+    userId: {type:String,required:true}, 
 })
 export interface Login{
     id:string;
@@ -12,4 +13,5 @@ export interface Login{
     password:string;
     hashedRt:string;
     role:string,
+    userId: string,
 }

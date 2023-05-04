@@ -35,6 +35,27 @@ export class AuthController {
        const result=await this.authService.addadmin(name, password);
        return  result as object;
     }
+    @Public()
+  @Post('signup/parent')
+  async createparent(
+    @Body('fullName') fullName: string,
+    @Body('password') password: string,
+    @Body('sex') sex: string,
+    @Body('phoneno') phoneNo: string,
+    @Body('email') email: string,
+    @Body('address') address: string,
+  ){
+    const generatedId = await this.authService.addparent(
+      fullName,
+      password,
+      sex,
+      phoneNo,
+      email,
+      address,
+    );
+    return {id: generatedId};
+  }
+
 
     
 

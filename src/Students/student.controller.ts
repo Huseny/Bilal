@@ -129,7 +129,7 @@ export class StudentController {
     return await this.studentservice.getdaymark(date);
   }
 
-  
+  @Public()
   @Get('getallstudents')
   async getallstudents() {
     const allstudents = await this.studentservice.getallstudents();
