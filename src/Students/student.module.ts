@@ -3,7 +3,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AbscenceSchema } from './abscence.model';
 import { MarkSchema } from './mark.model';
 import { StudentController } from './student.controller';
-import { SectionSchema, StudentSchema, TakenDays } from './student.model';
+import {
+  SectionSchema,
+  StudentSchema,
+  TakenDays,
+  UstazSchema,
+} from './student.model';
 import { StudentService } from './student.service';
 import { ParentSchema } from 'src/models/Parent.model';
 import { ClassSchema } from 'src/models/class.model';
@@ -16,8 +21,9 @@ import { ClassSchema } from 'src/models/class.model';
       { name: 'Mark', schema: MarkSchema },
       { name: 'Section', schema: SectionSchema },
       { name: 'TakenDays', schema: TakenDays },
-      { name: 'Parent', schema: ParentSchema},
-      { name: 'Class', schema: ClassSchema}
+      { name: 'Parent', schema: ParentSchema },
+      { name: 'Class', schema: ClassSchema },
+      { name: 'Ustaz', schema: UstazSchema },
     ]),
   ],
   providers: [StudentService],

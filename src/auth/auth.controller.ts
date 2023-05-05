@@ -5,6 +5,7 @@ import {
   HttpStatus,
   Body,
   UseGuards,
+  Get,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from 'src/common/decorators/public.decorator';
@@ -38,6 +39,11 @@ export class AuthController {
     return result as object;
   }
 
+  @Public()
+  @Post('del')
+  async del(@Body('id') id: string) {
+    return await this.authService.del(id);
+  }
   @Public()
   @Post('signup/admin')
   @HttpCode(HttpStatus.CREATED)

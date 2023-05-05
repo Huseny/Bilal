@@ -7,6 +7,7 @@ import { Student, TakenDays } from './student.model';
 import { Section } from './student.model';
 import { Parent } from 'src/models/Parent.model';
 import { Class } from 'src/models/class.model';
+import { Ustaz } from './student.model';
 
 @Injectable()
 export class StudentService {
@@ -18,6 +19,7 @@ export class StudentService {
     @InjectModel('TakenDays') private takenDays: Model<TakenDays>,
     @InjectModel('Parent') private parent: Model<Parent>,
     @InjectModel('Class') private Class: Model<Class>,
+    @InjectModel('Ustaz') private Ustaz: Model<Ustaz>,
   ) {}
 
   async addstudent(
@@ -106,6 +108,10 @@ export class StudentService {
   async deleteclass(sectionId: string) {
     let mySection = await this.Class.findOneAndDelete({ _id: sectionId });
     return mySection;
+  }
+
+  async getteachers() {
+    return await this.Ustaz.find().sort({ name: 1 }).exec();
   }
 
   async addabscent(studentId: string, dateofabscent: string) {

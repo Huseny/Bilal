@@ -107,6 +107,12 @@ export class StudentController {
     return result;
   }
 
+  @Public()
+  @Get('getteachers')
+  async getteachers() {
+    return await this.studentservice.getteachers();
+  }
+
   @Post('addabscent')
   async addabscent(
     @Body('studentId') studentId: string,

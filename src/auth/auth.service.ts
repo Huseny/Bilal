@@ -82,7 +82,6 @@ export class AuthService {
       const hash = await this.hashData(password);
       const newUstaz = new this.ustazModel({
         ustazName: name,
-        password: hash,
         phoneNo,
         email,
         address,
@@ -104,6 +103,10 @@ export class AuthService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  async del(id: string) {
+    return await this.loginModel.findOneAndRemove({ userId: id });
   }
 
   async addadmin(name: string, password: string): Promise<any> {

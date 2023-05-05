@@ -27,7 +27,6 @@ export const TakenDays = new mongoose.Schema({
 
 export const UstazSchema = new mongoose.Schema({
   ustazName: String,
-  password: String,
   phoneNo: Number,
   email: String,
   address: String,
@@ -56,7 +55,6 @@ export interface Section extends mongoose.Document {
 
 export interface Ustaz extends mongoose.Document {
   ustazName: string;
-  password: string;
   phoneNo: number;
   email: string;
   address: string;
