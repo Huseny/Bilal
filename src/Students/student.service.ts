@@ -8,7 +8,6 @@ import { Section } from './student.model';
 import { Parent } from 'src/models/Parent.model';
 import { Class } from 'src/models/class.model';
 import { ChildProcess } from 'child_process';
-const nodemailer = require('nodemailer');
 
 @Injectable()
 export class StudentService {
@@ -268,29 +267,5 @@ export class StudentService {
   async deleteclass(sectionId: string) {
     let mySection = await this.section.findOneAndDelete({ _id: sectionId });
     return mySection;
-  }
-  async sendmail(receiver: string, username: string, password: string) {
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: 'husenyusuf876@gmail.com',
-        pass: 'zfuteuwiogrjifyc',
-      },
-    });
-    const mailOptions = {
-      from: 'husenyusuf876@gmail.com',
-      to: receiver,
-      subject: 'የምዝገባ ማረጋገጫ',
-      text: `السلام عليكم ورحمة الله وبركاته\nወደ ሲስተሙ በተሳካ ሁኔታ ተመዝግበዋል። የሚከተሉትን መረጃዎች በማስገባት ወደ ሲስተሙ መግባት ይችላሉ።\n\nUsername: ${username}\nPassword: ${password}\n\n\nቢላል መስጂድ እና መድረሳ`,
-    };
-
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('Email sent: ' + info.response);
-      }
-    });
-    return true;
   }
 }
