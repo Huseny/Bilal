@@ -48,7 +48,7 @@ export class AuthController {
     const result = await this.authService.addadmin(name, password);
     return result as object;
   }
-  @Public()
+
   @Post('signup/parent')
   async createparent(
     @Body('username') username: string,
@@ -59,7 +59,7 @@ export class AuthController {
     @Body('email') email: string,
     @Body('address') address: string,
   ) {
-    const generatedId = await this.authService.addparent(
+    const generatedParent = await this.authService.addparent(
       username,
       password,
       fullName,
@@ -68,7 +68,7 @@ export class AuthController {
       email,
       address,
     );
-    return { id: generatedId };
+    return generatedParent;
   }
 
   @Public()
@@ -93,7 +93,6 @@ export class AuthController {
     @GetCurrentUserId() userId: string,
     @GetCurrentUser('refreshToken') refreshToken: string,
   ) {
-    //console.log(refreshToken);
     const result = await this.authService.refreshTokens(userId, refreshToken);
     return result as object;
   }

@@ -68,8 +68,6 @@ export class AuthService {
     });
     if (!doc) {
       throw new HttpException('A problem has occured', HttpStatus.BAD_REQUEST);
-    } else {
-      console.log('Updated document: ', doc);
     }
   }
   async signUpEmployer(
@@ -94,21 +92,17 @@ export class AuthService {
         name: username,
         password: hash,
         role: UserRole.USTAZ,
-        userId: newUstazId,
+        userId: newUstazId._id,
       });
 
       await newUstazLogin.save();
-
-      const tokens = await this.getTokens(
-        newUstazLogin.id,
-        newUstazLogin.name,
-        newUstazLogin.role,
-      );
-      await this.updateRtHash(newUstazLogin.id, tokens.refresh_token);
       this.sendmail(email, username, password);
-      return { ...tokens, role: newUstazLogin.role };
+      return newUstazId;
     } catch (err) {
-      return err;
+      return new HttpException(
+        'a problem has occured',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -134,7 +128,10 @@ export class AuthService {
       await this.updateRtHash(newadminlogin.id, tokens.refresh_token);
       return { ...tokens, role: newadminlogin.role };
     } catch (err) {
-      return err;
+      return new HttpException(
+        'a problem has occured',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
   async addparent(
@@ -161,31 +158,25 @@ export class AuthService {
         name: username,
         password: hash,
         role: UserRole.PARENT,
-        userId: parentId,
+        userId: parentId._id,
       });
 
       await newParentLogin.save();
-      const tokens = await this.getTokens(
-        newParentLogin.id,
-        newParentLogin.name,
-        newParentLogin.role,
-      );
-      await this.updateRtHash(newParentLogin.id, tokens.refresh_token);
       this.sendmail(email, username, password);
-      return { ...tokens, role: newParentLogin.role };
+      return parentId;
     } catch (err) {
-      return err;
+      return new HttpException(
+        'a problem has occured',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   async login(name: string, password: string): Promise<any> {
     const user = await this.loginModel.findOne({ name: name });
-    console.log(user);
     if (!user) {
-      //console.log('User not found');
       throw new HttpException('User not found!', HttpStatus.FORBIDDEN);
     } else {
-      //console.log('Found user:', user);
       const passwordMatches = await bcrypt.compare(password, user.password);
       if (!passwordMatches)
         throw new HttpException(
@@ -203,23 +194,17 @@ export class AuthService {
     });
     if (!doc) {
       throw new HttpException('A problem has occured', HttpStatus.BAD_REQUEST);
-    } else {
-      //console.log('Updated document: ', doc);
     }
     return true;
   }
   async refreshTokens(userId: string, rt: string) {
     const user = await this.loginModel.findById({ _id: userId });
-    console.log(user.toJSON());
     if (!user) {
       throw new HttpException('A problem has occured', HttpStatus.BAD_REQUEST);
-      //console.error(err);
     } else {
-      //console.log(user);
       if (!user || !user.hashedRt)
         throw new HttpException('Access Denied!', HttpStatus.FORBIDDEN);
       const rtMatches = await bcrypt.compare(rt, user.hashedRt);
-      console.log(rtMatches, ' ');
       if (!rtMatches) {
         throw new HttpException('Access Denied!', HttpStatus.FORBIDDEN);
       } else {
@@ -231,15 +216,11 @@ export class AuthService {
   }
 
   async getUserInformation(userId: string) {
-    // const abscentdays = await this.abscent.find({ studentId: studentId });
     const user = await this.loginModel.findById({ _id: userId });
-    console.log(user.toJSON());
     if (!user) {
       throw new HttpException('A problem has occured', HttpStatus.BAD_REQUEST);
-      //console.error(err);
-    } else {
-      return user;
     }
+    return user;
   }
   async sendmail(receiver: string, username: string, password: string) {
     const transporter = nodemailer.createTransport({

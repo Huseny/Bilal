@@ -7,7 +7,6 @@ import { Student, TakenDays } from './student.model';
 import { Section } from './student.model';
 import { Parent } from 'src/models/Parent.model';
 import { Class } from 'src/models/class.model';
-import { ChildProcess } from 'child_process';
 
 @Injectable()
 export class StudentService {
@@ -54,22 +53,24 @@ export class StudentService {
     const studentId = await newStudent.save();
     return studentId;
   }
-  async addparent(
-    fullName: string,
-    sex: string,
-    phoneNo: string,
-    email: string,
-    address: string,
-  ) {
-    const newParent = new this.parent({
-      fullName,
-      sex,
-      phoneNo,
-      email,
-      address,
+
+  async getparents() {
+    return await this.parent.find().sort({ fullName: 1 }).exec();
+  }
+
+  async addclass(className: string, dateCreated: Date) {
+    const newClass = new this.Class({
+      className,
+      dateCreated,
     });
-    const parentId = await newParent.save();
-    return parentId;
+
+    const classId = await newClass.save();
+    return classId;
+  }
+
+  async getallsections() {
+    let sections = await this.Class.find().sort({ className: 1 }).exec();
+    return sections;
   }
 
   async addabscent(studentId: string, dateofabscent: string) {
@@ -80,17 +81,6 @@ export class StudentService {
 
     const abscentId = await newAbscent.save();
     return abscentId;
-  }
-
-  async addclass(className: string, dateStarted: Date, dateEnded: Date) {
-    const newClass = new this.Class({
-      className,
-      dateStarted,
-      dateEnded,
-    });
-
-    const classId = await newClass.save();
-    return classId;
   }
 
   async getattendance() {
@@ -235,20 +225,6 @@ export class StudentService {
     await this.abscent.findOneAndDelete({ studentId: studentId });
     await this.mark.findOneAndDelete({ studentId: studentId });
     return studentDetail;
-  }
-
-  async createsection(sectionName: string, dateCreated: string) {
-    let newSection = new this.section({
-      sectionName: sectionName,
-      dateCreated: dateCreated,
-    });
-    newSection = await newSection.save();
-    return newSection;
-  }
-
-  async getallsections() {
-    let sections = await this.section.find().exec();
-    return sections;
   }
 
   async getstudentbysection(sectionName: string) {

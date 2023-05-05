@@ -2,7 +2,7 @@ import { Body, Controller, Post, Get, Patch } from '@nestjs/common';
 import { StudentService } from './student.service';
 import { Public } from 'src/common/decorators/public.decorator';
 
-@Controller('student')
+@Controller('main')
 export class StudentController {
   constructor(private readonly studentservice: StudentService) {}
 
@@ -19,10 +19,10 @@ export class StudentController {
     @Body('homeNo') homeNo: number,
     @Body('familyNo') familyNo: number,
     @Body('MesderAdukhul') MesderAdukhul: string,
-    @Body('ChooseParent') ChooseParent: string,
-    @Body('chooseClass') chooseClass: string,
+    @Body('parentId') parentId: string,
+    @Body('classId') classId: string,
   ) {
-    const generatedId = await this.studentservice.addstudent(
+    const generatedStudent = await this.studentservice.addstudent(
       fullName,
       studentAge,
       musteweTeilim,
@@ -34,29 +34,35 @@ export class StudentController {
       homeNo,
       familyNo,
       MesderAdukhul,
-      ChooseParent,
-      chooseClass,
+      parentId,
+      classId,
     );
-    return { id: generatedId };
+    return generatedStudent;
   }
 
   @Public()
-  @Post('addparent')
-  async createparent(
-    @Body('fullName') fullName: string,
-    @Body('sex') sex: string,
-    @Body('phoneno') phoneNo: string,
-    @Body('email') email: string,
-    @Body('address') address: string,
+  @Get('getparents')
+  async getparents() {
+    return await this.studentservice.getparents();
+  }
+
+  @Post('addclass')
+  async addclass(
+    @Body('classname') className: string,
+    @Body('datecreated') dateCreated: Date,
   ) {
-    const generatedId = await this.studentservice.addparent(
-      fullName,
-      sex,
-      phoneNo,
-      email,
-      address,
+    const addedClass = await this.studentservice.addclass(
+      className,
+      dateCreated,
     );
-    return { id: generatedId._id };
+    return addedClass;
+  }
+
+  @Public()
+  @Get('getallsections')
+  async getsections() {
+    const result = await this.studentservice.getallsections();
+    return result;
   }
 
   @Post('addabscent')
@@ -67,21 +73,6 @@ export class StudentController {
     const abscentId = await this.studentservice.addabscent(
       studentId,
       dateofabscent,
-    );
-
-    return { id: abscentId };
-  }
-
-  @Post('addclass')
-  async addclass(
-    @Body('classname') className: string,
-    @Body('datestarted') dateStarted: Date,
-    @Body('dateEnded') dateEnded: Date,
-  ) {
-    const abscentId = await this.studentservice.addclass(
-      className,
-      dateStarted,
-      dateEnded,
     );
 
     return { id: abscentId };
@@ -205,23 +196,6 @@ export class StudentController {
   async deel() {
     await this.studentservice.deel();
     return 'done';
-  }
-
-  @Post('createsection')
-  async createsection(
-    @Body('sectionName') sectionName: string,
-    @Body('dateCreated') dateCreated: string,
-  ) {
-    const result = await this.studentservice.createsection(
-      sectionName,
-      dateCreated,
-    );
-  }
-
-  @Get('getallsections')
-  async getsections() {
-    const result = await this.studentservice.getallsections();
-    return result;
   }
 
   @Post('getstudentsbysection')
