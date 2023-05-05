@@ -54,8 +54,25 @@ export class StudentService {
     return studentId;
   }
 
+  async getallstudents() {
+    const listofstudents = await this.student
+      .find()
+      .sort({ fullName: 1 })
+      .exec();
+    return listofstudents;
+  }
+
   async getparents() {
     return await this.parent.find().sort({ fullName: 1 }).exec();
+  }
+
+  async deleteparent(parentId: string) {
+    return await this.parent.findOneAndDelete({ _id: parentId });
+  }
+
+  async getparentbyid(classId: string) {
+    let parentS = await this.parent.findOne({ _id: classId }).exec();
+    return parentS;
   }
 
   async addclass(className: string, dateCreated: Date) {
@@ -71,6 +88,24 @@ export class StudentService {
   async getallsections() {
     let sections = await this.Class.find().sort({ className: 1 }).exec();
     return sections;
+  }
+
+  async getclassbyid(classId: string) {
+    let section = await this.Class.findOne({ _id: classId }).exec();
+    return section;
+  }
+
+  async editsection(sectionId: string, sectionName: string) {
+    let mySection = await this.Class.find({ _id: sectionId });
+    let realSection = mySection[0];
+    realSection.className = sectionName;
+    await realSection.save();
+    return realSection;
+  }
+
+  async deleteclass(sectionId: string) {
+    let mySection = await this.Class.findOneAndDelete({ _id: sectionId });
+    return mySection;
   }
 
   async addabscent(studentId: string, dateofabscent: string) {
@@ -133,13 +168,6 @@ export class StudentService {
     return totalMark;
   }
 
-  async getallstudents() {
-    const listofstudents = await this.student
-      .find()
-      .sort({ firstName: 'asc' })
-      .exec();
-    return listofstudents;
-  }
   async getallabscentdays(studentId: string) {
     const abscentdays = await this.abscent.find({ studentId: studentId });
     return abscentdays;
@@ -230,18 +258,5 @@ export class StudentService {
   async getstudentbysection(sectionName: string) {
     let students = await this.student.find({ studentClass: sectionName });
     return students;
-  }
-
-  async editsection(sectionId: string, sectionName: string) {
-    let mySection = await this.section.find({ _id: sectionId });
-    let realSection = mySection[0];
-    realSection.sectionName = sectionName;
-    await realSection.save();
-    return realSection;
-  }
-
-  async deleteclass(sectionId: string) {
-    let mySection = await this.section.findOneAndDelete({ _id: sectionId });
-    return mySection;
   }
 }

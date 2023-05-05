@@ -8,7 +8,7 @@ export class StudentController {
 
   @Post('addstudent')
   async createstudent(
-    @Body('fullnName') fullName: string,
+    @Body('fullName') fullName: string,
     @Body('studentAge') studentAge: number,
     @Body('musteweTeilim') musteweTeilim: string,
     @Body('sex') sex: string,
@@ -41,9 +41,27 @@ export class StudentController {
   }
 
   @Public()
+  @Get('getallstudents')
+  async getallstudents() {
+    const allstudents = await this.studentservice.getallstudents();
+    return allstudents;
+  }
+
+  @Public()
   @Get('getparents')
   async getparents() {
     return await this.studentservice.getparents();
+  }
+  @Public()
+  @Patch('deleteparent')
+  async deleteparent(@Body('parentId') parentId: string) {
+    return await this.studentservice.deleteparent(parentId);
+  }
+
+  @Public()
+  @Post('getparentbyid')
+  async getparentbyid(@Body('parentId') parentId: string) {
+    return await this.studentservice.getparentbyid(parentId);
   }
 
   @Post('addclass')
@@ -62,6 +80,30 @@ export class StudentController {
   @Get('getallsections')
   async getsections() {
     const result = await this.studentservice.getallsections();
+    return result;
+  }
+
+  @Public()
+  @Post('getclassbyid')
+  async getclassbyid(@Body('classId') classId: string) {
+    return await this.studentservice.getclassbyid(classId);
+  }
+
+  @Patch('editclass')
+  async editclass(
+    @Body('classId') classId: string,
+    @Body('className') className: string,
+  ) {
+    let editedSection = await this.studentservice.editsection(
+      classId,
+      className,
+    );
+    return editedSection;
+  }
+
+  @Patch('deleteclass')
+  async deleteclass(@Body('classId') classId: string) {
+    let result = await this.studentservice.deleteclass(classId);
     return result;
   }
 
@@ -117,12 +159,6 @@ export class StudentController {
   @Post('getdatemark')
   async gettodaymark(@Body('date') date: string) {
     return await this.studentservice.getdaymark(date);
-  }
-
-  @Get('getallstudents')
-  async getallstudents() {
-    const allstudents = await this.studentservice.getallstudents();
-    return allstudents;
   }
 
   @Post('getallabscentdays')
@@ -192,6 +228,7 @@ export class StudentController {
     return await this.studentservice.deletedate();
   }
 
+  @Public()
   @Get('deel')
   async deel() {
     await this.studentservice.deel();
@@ -202,23 +239,5 @@ export class StudentController {
   async getstudentsbysection(@Body('sectionName') sectionName: string) {
     let students = await this.studentservice.getstudentbysection(sectionName);
     return students;
-  }
-
-  @Patch('editclass')
-  async editclass(
-    @Body('classId') classId: string,
-    @Body('className') className: string,
-  ) {
-    let editedSection = await this.studentservice.editsection(
-      classId,
-      className,
-    );
-    return editedSection;
-  }
-
-  @Patch('deleteclass')
-  async deleteclass(@Body('classId') classId: string) {
-    let result = await this.studentservice.deleteclass(classId);
-    return result;
   }
 }
