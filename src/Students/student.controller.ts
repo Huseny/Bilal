@@ -20,8 +20,8 @@ export class StudentController {
     @Body('familyNo') familyNo: number,
     @Body('MesderAdukhul') MesderAdukhul: string,
     @Body('ChooseParent') ChooseParent: string,
-    @Body('chooseClass') chooseClass: string,    
-    ) {
+    @Body('chooseClass') chooseClass: string,
+  ) {
     const generatedId = await this.studentservice.addstudent(
       fullName,
       studentAge,
@@ -48,7 +48,7 @@ export class StudentController {
     @Body('phoneno') phoneNo: string,
     @Body('email') email: string,
     @Body('address') address: string,
-  ){
+  ) {
     const generatedId = await this.studentservice.addparent(
       fullName,
       sex,
@@ -56,7 +56,7 @@ export class StudentController {
       email,
       address,
     );
-    return {id: generatedId._id};
+    return { id: generatedId._id };
   }
 
   @Post('addabscent')
@@ -81,12 +81,11 @@ export class StudentController {
     const abscentId = await this.studentservice.addclass(
       className,
       dateStarted,
-      dateEnded
+      dateEnded,
     );
 
     return { id: abscentId };
   }
-  
 
   @Post('addDate')
   async addDay(@Body('day') day: string) {
@@ -129,7 +128,6 @@ export class StudentController {
     return await this.studentservice.getdaymark(date);
   }
 
-  
   @Get('getallstudents')
   async getallstudents() {
     const allstudents = await this.studentservice.getallstudents();
@@ -171,7 +169,7 @@ export class StudentController {
     @Body('familyNo') familyNo: number,
     @Body('MesderAdukhul') MesderAdukhul: string,
     @Body('ChooseParent') ChooseParent: string,
-    @Body('chooseClass') chooseClass: string,    
+    @Body('chooseClass') chooseClass: string,
   ) {
     const result = await this.studentservice.editstudent(
       studentId,

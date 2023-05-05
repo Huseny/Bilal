@@ -8,6 +8,7 @@ import { Section } from './student.model';
 import { Parent } from 'src/models/Parent.model';
 import { Class } from 'src/models/class.model';
 import { ChildProcess } from 'child_process';
+const nodemailer = require('nodemailer');
 
 @Injectable()
 export class StudentService {
@@ -20,22 +21,21 @@ export class StudentService {
     @InjectModel('Parent') private parent: Model<Parent>,
     @InjectModel('Class') private Class: Model<Class>,
   ) {}
-  
 
   async addstudent(
     fullName: string,
     age: number,
-  musteweTeilim: string,
-  sex: string,
-  subCity: string,
-  wereda: string,
-  kebele: string,
-  specialNameOfArea: string,
-  homeNo: number,
-  familyNo: number,
-  MesderAdukhul: string,
-  ChooseParent: string,
-  chooseClass: string,
+    musteweTeilim: string,
+    sex: string,
+    subCity: string,
+    wereda: string,
+    kebele: string,
+    specialNameOfArea: string,
+    homeNo: number,
+    familyNo: number,
+    MesderAdukhul: string,
+    ChooseParent: string,
+    chooseClass: string,
   ) {
     const newStudent = new this.student({
       fullName,
@@ -55,24 +55,23 @@ export class StudentService {
     const studentId = await newStudent.save();
     return studentId;
   }
-async addparent(
-  fullName: string,
-  sex: string,
-  phoneNo: string,
-  email: string,
-  address: string,
-){
-  const newParent = new this.parent({
-    fullName,
-    sex,
-    phoneNo,
-    email,
-    address,
-  });
-  const parentId = await newParent.save();
-  return parentId;
-}
-
+  async addparent(
+    fullName: string,
+    sex: string,
+    phoneNo: string,
+    email: string,
+    address: string,
+  ) {
+    const newParent = new this.parent({
+      fullName,
+      sex,
+      phoneNo,
+      email,
+      address,
+    });
+    const parentId = await newParent.save();
+    return parentId;
+  }
 
   async addabscent(studentId: string, dateofabscent: string) {
     const newAbscent = new this.abscent({
@@ -88,7 +87,7 @@ async addparent(
     const newClass = new this.Class({
       className,
       dateStarted,
-      dateEnded
+      dateEnded,
     });
 
     const classId = await newClass.save();
@@ -190,18 +189,18 @@ async addparent(
   async editstudent(
     studentId: string,
     fullName,
-      age,
-      musteweTeilim,
-      sex,
-      subCity,
-      wereda,
-      kebele,
-      specialNameOfArea,
-      homeNo,
-      familyNo,
-      MesderAdukhul,
-      ChooseParent,
-      chooseClass,
+    age,
+    musteweTeilim,
+    sex,
+    subCity,
+    wereda,
+    kebele,
+    specialNameOfArea,
+    homeNo,
+    familyNo,
+    MesderAdukhul,
+    ChooseParent,
+    chooseClass,
   ) {
     try {
       let studentDetail = await this.student.find({
@@ -269,5 +268,29 @@ async addparent(
   async deleteclass(sectionId: string) {
     let mySection = await this.section.findOneAndDelete({ _id: sectionId });
     return mySection;
+  }
+  async sendmail(receiver: string, username: string, password: string) {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'husenyusuf876@gmail.com',
+        pass: 'zfuteuwiogrjifyc',
+      },
+    });
+    const mailOptions = {
+      from: 'husenyusuf876@gmail.com',
+      to: receiver,
+      subject: 'የምዝገባ ማረጋገጫ',
+      text: `السلام عليكم ورحمة الله وبركاته\nወደ ሲስተሙ በተሳካ ሁኔታ ተመዝግበዋል። የሚከተሉትን መረጃዎች በማስገባት ወደ ሲስተሙ መግባት ይችላሉ።\n\nUsername: ${username}\nPassword: ${password}\n\n\nቢላል መስጂድ እና መድረሳ`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    });
+    return true;
   }
 }

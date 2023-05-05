@@ -29,6 +29,7 @@
     "@nestjs/platform-express": "^9.0.0",
     "bcrypt": "^5.1.0",
     "mongoose": "^7.0.2",
+    "nodemailer": "^6.9.1",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
@@ -78,6 +79,6 @@
     "testEnvironment": "node"
   },
   "engines": {
-  "node": "18.13.0"
-}
+    "node": "18.13.0"
+  }
 }
