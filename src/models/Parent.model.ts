@@ -1,6 +1,7 @@
 import * as mongoose from 'mongoose';
 export const ParentSchema = new mongoose.Schema({
     fullName: String,
+    password: String,
     sex: String,
     phoneNo: String,
     email: String,
@@ -10,6 +11,7 @@ export const ParentSchema = new mongoose.Schema({
 
 export interface Parent extends mongoose.Document {
     fullName: string;
+    password: string;
     sex: string;
     phoneNo: string;
     email: string;

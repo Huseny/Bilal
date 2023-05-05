@@ -8,6 +8,7 @@ import { LoginSchema } from './login.model';
 import { AtStrategy } from './strategies/at.strategy';
 import { RtStrategy } from './strategies/rt.strategy';
 import { AdminSchema } from 'src/models/admin.model';
+import { ParentSchema } from 'src/models/Parent.model';
 
 @Module({
   imports: [JwtModule.register({
@@ -18,7 +19,8 @@ import { AdminSchema } from 'src/models/admin.model';
     [
       {name:"Ustaz", schema: UstazSchema},
       {name:"Login",schema:LoginSchema},
-      {name: "Admin", schema: AdminSchema}
+      {name: "Admin", schema: AdminSchema},
+      {name: "Parent", schema: ParentSchema}
     ])],
   providers: [ AuthService,AtStrategy, RtStrategy],
   controllers: [AuthController]

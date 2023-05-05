@@ -247,4 +247,14 @@ export class StudentController {
     let result = await this.studentservice.deleteclass(classId);
     return result;
   }
+
+  @Public()
+  @Post('sendmail')
+  async sendmail(
+    @Body('receiver') receiver: string,
+    @Body('username') username: string,
+    @Body('password') password: string,
+  ) {
+    return await this.studentservice.sendmail(receiver, username, password);
+  }
 }
