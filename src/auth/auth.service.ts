@@ -90,12 +90,12 @@ export class AuthService {
       const newUstazLogin = new this.loginModel({
         name: username,
         password: hash,
-        role: UserRole.USTAZ,
+        role: UserRole.TEACHER,
         userId: newUstazId._id,
       });
 
       await newUstazLogin.save();
-      this.sendmail(email, username, password);
+      let sended = await this.sendmail(email, username, password);
       return newUstazId;
     } catch (err) {
       return new HttpException(
@@ -106,7 +106,9 @@ export class AuthService {
   }
 
   async del(id: string) {
-    return await this.loginModel.findOneAndRemove({ userId: id });
+    let user = await this.loginModel.findOneAndDelete({ userId: id });
+    let deluser = await this.ustazModel.findOneAndDelete({ _id: id });
+    return deluser;
   }
 
   async addadmin(name: string, password: string): Promise<any> {
@@ -150,7 +152,6 @@ export class AuthService {
       const hash = await this.hashData(password);
       const newParent = new this.parent({
         fullName,
-        password,
         sex,
         phoneNo,
         email,
@@ -165,7 +166,7 @@ export class AuthService {
       });
 
       await newParentLogin.save();
-      this.sendmail(email, username, password);
+      let sended = this.sendmail(email, username, password);
       return parentId;
     } catch (err) {
       return new HttpException(
@@ -240,6 +241,6 @@ export class AuthService {
       text: `السلام عليكم ورحمة الله وبركاته\nወደ ሲስተሙ በተሳካ ሁኔታ ተመዝግበዋል። የሚከተሉትን መረጃዎች በማስገባት ወደ ሲስተሙ መግባት ይችላሉ።\n\nUsername: ${username}\nPassword: ${password}\n\n\nቢላል መስጂድ እና መድረሳ`,
     };
 
-    transporter.sendMail(mailOptions);
+    return await transporter.sendMail(mailOptions);
   }
 }

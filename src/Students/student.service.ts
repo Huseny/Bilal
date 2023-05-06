@@ -8,6 +8,7 @@ import { Section } from './student.model';
 import { Parent } from 'src/models/Parent.model';
 import { Class } from 'src/models/class.model';
 import { Ustaz } from './student.model';
+import { Evaluation } from 'src/models/evaluation.model';
 
 @Injectable()
 export class StudentService {
@@ -20,7 +21,12 @@ export class StudentService {
     @InjectModel('Parent') private parent: Model<Parent>,
     @InjectModel('Class') private Class: Model<Class>,
     @InjectModel('Ustaz') private Ustaz: Model<Ustaz>,
+    @InjectModel('Evaluation') private Evaluation: Model<Evaluation>,
   ) {}
+
+  async deleteF(id: string) {
+    return await this.Evaluation.findOneAndDelete({ _id: id });
+  }
 
   async addstudent(
     fullName: string,
@@ -112,6 +118,29 @@ export class StudentService {
 
   async getteachers() {
     return await this.Ustaz.find().sort({ name: 1 }).exec();
+  }
+
+  async getteacherbyid(id: string) {
+    return await this.Ustaz.findOne({ _id: id }).exec();
+  }
+
+  async assignteacher(classId: string, teacherId: string) {
+    const theClass = await this.Class.findOne({ _id: classId });
+    theClass.assignedTeacher = teacherId;
+    theClass.save();
+    return theClass;
+  }
+
+  async createexam(name: string, fields: Array<Object>) {
+    const newEval = new this.Evaluation({
+      name,
+      fields,
+    });
+    return await newEval.save();
+  }
+
+  async getexams() {
+    return await this.Evaluation.find().sort({ name: 1 }).exec();
   }
 
   async addabscent(studentId: string, dateofabscent: string) {
@@ -261,8 +290,8 @@ export class StudentService {
     return studentDetail;
   }
 
-  async getstudentbysection(sectionName: string) {
-    let students = await this.student.find({ studentClass: sectionName });
+  async getstudentbysection(classId: string) {
+    let students = await this.student.find({ chooseClass: classId });
     return students;
   }
 }

@@ -76,7 +76,12 @@ export class StudentController {
     return addedClass;
   }
 
-  @Public()
+  @Post('getstudentsbysection')
+  async getstudentsbysection(@Body('classId') classId: string) {
+    let students = await this.studentservice.getstudentbysection(classId);
+    return students;
+  }
+
   @Get('getallsections')
   async getsections() {
     const result = await this.studentservice.getallsections();
@@ -111,6 +116,39 @@ export class StudentController {
   @Get('getteachers')
   async getteachers() {
     return await this.studentservice.getteachers();
+  }
+
+  @Post('getteacherbyid')
+  async getteacherbyid(@Body('teacherId') teacherId: string) {
+    return await this.studentservice.getteacherbyid(teacherId);
+  }
+
+  @Patch('assignteacher')
+  async assignteacher(
+    @Body('classId') classId: string,
+    @Body('teacherId') teacherId: string,
+  ) {
+    return await this.studentservice.assignteacher(classId, teacherId);
+  }
+
+  @Post('createexam')
+  async createexam(
+    @Body('name') name: string,
+    @Body('fields') fields: Array<Object>,
+  ) {
+    return await this.studentservice.createexam(name, fields);
+  }
+
+  @Public()
+  @Get('getexams')
+  async getexams() {
+    return await this.studentservice.getexams();
+  }
+
+  @Public()
+  @Post('Delet')
+  async deleteF(@Body('id') id: string) {
+    return await this.studentservice.deleteF(id);
   }
 
   @Post('addabscent')
@@ -178,6 +216,7 @@ export class StudentController {
     return await this.studentservice.gettaken();
   }
 
+  @Public()
   @Get('getattendance')
   async getattendance() {
     return await this.studentservice.getattendance();
@@ -239,11 +278,5 @@ export class StudentController {
   async deel() {
     await this.studentservice.deel();
     return 'done';
-  }
-
-  @Post('getstudentsbysection')
-  async getstudentsbysection(@Body('sectionName') sectionName: string) {
-    let students = await this.studentservice.getstudentbysection(sectionName);
-    return students;
   }
 }

@@ -12,6 +12,7 @@ import {
 import { StudentService } from './student.service';
 import { ParentSchema } from 'src/models/Parent.model';
 import { ClassSchema } from 'src/models/class.model';
+import { EvaluationSchema } from 'src/models/evaluation.model';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ClassSchema } from 'src/models/class.model';
       { name: 'Parent', schema: ParentSchema },
       { name: 'Class', schema: ClassSchema },
       { name: 'Ustaz', schema: UstazSchema },
+      { name: 'Evaluation', schema: EvaluationSchema },
     ]),
   ],
   providers: [StudentService],
