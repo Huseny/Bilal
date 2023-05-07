@@ -75,6 +75,7 @@ export class AuthController {
     return generatedParent;
   }
 
+  @Public()
   @Get('loginget')
   async getlogin() {
     return await this.authService.getlogins();

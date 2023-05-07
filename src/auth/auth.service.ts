@@ -139,7 +139,6 @@ export class AuthService {
       await this.updateRtHash(newadminlogin.id, tokens.refresh_token);
       return { ...tokens, role: newadminlogin.role };
     } catch (err) {
-      console.log(err);
       return new HttpException(
         'a problem has occured',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -171,8 +170,8 @@ export class AuthService {
         role: UserRole.PARENT,
         userId: parentId._id,
       });
-      await newParentLogin.save();
-      return parentId;
+      const parentLogin = await newParentLogin.save();
+      return parentLogin;
     } catch (err) {
       console.log(err);
       return new HttpException(
