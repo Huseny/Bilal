@@ -81,7 +81,13 @@ export class StudentController {
     let students = await this.studentservice.getstudentbysection(classId);
     return students;
   }
+  @Public()
+  @Post('getassignedsections')
+  async getassignedsection(@Body('assignedTeacher') assignedTeacher: string) {
+    return await this.studentservice.getassignedsection(assignedTeacher);
+  }
 
+  @Public()
   @Get('getallsections')
   async getsections() {
     const result = await this.studentservice.getallsections();

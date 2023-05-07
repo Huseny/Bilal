@@ -13,6 +13,7 @@ import { StudentService } from './student.service';
 import { ParentSchema } from 'src/models/Parent.model';
 import { ClassSchema } from 'src/models/class.model';
 import { EvaluationSchema } from 'src/models/evaluation.model';
+import { LoginSchema } from 'src/auth/login.model';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { EvaluationSchema } from 'src/models/evaluation.model';
       { name: 'Class', schema: ClassSchema },
       { name: 'Ustaz', schema: UstazSchema },
       { name: 'Evaluation', schema: EvaluationSchema },
+      { name: 'Login', schema: LoginSchema },
     ]),
   ],
   providers: [StudentService],

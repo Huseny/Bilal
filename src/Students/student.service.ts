@@ -9,6 +9,7 @@ import { Parent } from 'src/models/Parent.model';
 import { Class } from 'src/models/class.model';
 import { Ustaz } from './student.model';
 import { Evaluation } from 'src/models/evaluation.model';
+import { Login } from 'src/auth/login.model';
 
 @Injectable()
 export class StudentService {
@@ -22,6 +23,7 @@ export class StudentService {
     @InjectModel('Class') private Class: Model<Class>,
     @InjectModel('Ustaz') private Ustaz: Model<Ustaz>,
     @InjectModel('Evaluation') private Evaluation: Model<Evaluation>,
+    @InjectModel('Login') private Login: Model<Login>,
   ) {}
 
   async deleteF(id: string) {
@@ -214,12 +216,14 @@ export class StudentService {
     let mar = 3;
     let sec = 4;
     let td = 5;
-    while (whate || st || mar || sec || td) {
-      whate = await this.abscent.findOneAndRemove();
-      st = await this.student.findOneAndRemove();
-      mar = await this.mark.findOneAndDelete();
-      sec = await this.section.findOneAndDelete();
-      td = await this.takenDays.findOneAndDelete();
+    let t = 6;
+    while (whate || st || mar || sec || td || t) {
+      whate = await this.Class.findOneAndRemove();
+      st = await this.Ustaz.findOneAndRemove();
+      mar = await this.student.findOneAndDelete();
+      sec = await this.parent.findOneAndDelete();
+      td = await this.Evaluation.findOneAndDelete();
+      t = await this.Login.findOneAndDelete();
       console.log(whate, st, mar, sec, td);
     }
   }
@@ -288,6 +292,12 @@ export class StudentService {
     await this.abscent.findOneAndDelete({ studentId: studentId });
     await this.mark.findOneAndDelete({ studentId: studentId });
     return studentDetail;
+  }
+
+  async getassignedsection(assignedTeacher: string) {
+    const te = await this.Class.find({ assignedTeacher: assignedTeacher });
+    console.log(te);
+    return te;
   }
 
   async getstudentbysection(classId: string) {

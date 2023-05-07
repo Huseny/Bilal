@@ -17,7 +17,6 @@ import { GetCurrentUser } from 'src/common/decorators/get-current-user.decorator
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Public()
   @Post('signup/ustaz')
   @HttpCode(HttpStatus.CREATED)
   async signUpEmployer(
@@ -39,12 +38,11 @@ export class AuthController {
     return result as object;
   }
 
-  @Public()
-  @Post('del')
-  async del(@Body('id') id: string) {
-    return await this.authService.del(id);
+  @Get('del')
+  async del() {
+    return await this.authService.del();
   }
-  @Public()
+
   @Post('signup/admin')
   @HttpCode(HttpStatus.CREATED)
   async addadmin(
@@ -75,6 +73,11 @@ export class AuthController {
       address,
     );
     return generatedParent;
+  }
+
+  @Get('loginget')
+  async getlogin() {
+    return await this.authService.getlogins();
   }
 
   @Public()

@@ -95,7 +95,6 @@ export class AuthService {
       });
 
       await newUstazLogin.save();
-      let sended = await this.sendmail(email, username, password);
       return newUstazId;
     } catch (err) {
       return new HttpException(
@@ -105,26 +104,33 @@ export class AuthService {
     }
   }
 
-  async del(id: string) {
-    let user = await this.loginModel.findOneAndDelete({ userId: id });
-    let deluser = await this.ustazModel.findOneAndDelete({ _id: id });
-    return deluser;
+  async del() {
+    let c = (await this.parent.find())[0];
+    while (c) {
+      c = await this.parent.findOneAndDelete();
+      if (c) {
+        await this.loginModel.findOneAndDelete({ userId: c._id });
+        console.log(c);
+      }
+    }
+    return 'done';
   }
 
   async addadmin(name: string, password: string): Promise<any> {
     try {
       const hash = await this.hashData(password);
-      const newadminlogin = new this.loginModel({
-        name: name,
-        password: hash,
-        role: UserRole.ADMIN,
-      });
       const newAdmin = new this.adminModel({
         ustazName: name,
         password: hash,
       });
-      await newadminlogin.save();
       await newAdmin.save();
+      const newadminlogin = new this.loginModel({
+        name: name,
+        password: hash,
+        role: UserRole.ADMIN,
+        userId: newAdmin._id,
+      });
+      await newadminlogin.save();
       const tokens = await this.getTokens(
         newadminlogin.id,
         newadminlogin.name,
@@ -133,6 +139,7 @@ export class AuthService {
       await this.updateRtHash(newadminlogin.id, tokens.refresh_token);
       return { ...tokens, role: newadminlogin.role };
     } catch (err) {
+      console.log(err);
       return new HttpException(
         'a problem has occured',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -164,11 +171,10 @@ export class AuthService {
         role: UserRole.PARENT,
         userId: parentId._id,
       });
-
       await newParentLogin.save();
-      let sended = this.sendmail(email, username, password);
       return parentId;
     } catch (err) {
+      console.log(err);
       return new HttpException(
         'a problem has occured',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -176,6 +182,9 @@ export class AuthService {
     }
   }
 
+  async getlogins() {
+    return await this.loginModel.find().sort({ role: 1 }).exec();
+  }
   async login(name: string, password: string): Promise<any> {
     const user = await this.loginModel.findOne({ name: name });
     if (!user) {
